@@ -27,3 +27,11 @@ form{
 .d-none{
   display: none;
 }
+ul{
+  border: 0.5px solid gray;
+}
+.li-link a{
+  text-decoration: none;
+  color: black;
+  margin-left: 10px;
+}
