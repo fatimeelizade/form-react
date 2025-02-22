@@ -35,3 +35,70 @@ ul{
   color: black;
   margin-left: 10px;
 }
+.warning{
+  font-size: 18px;
+}
+.button-yes button{
+  background-color: green;
+  color: white;
+  border: none;
+  width: 90px;
+  height: 50px;
+  font-size: 15px;
+  border-radius: 6px;
+}
+
+.button-no button{
+  background-color: red;
+  color: white;
+  border: none;
+  width: 90px;
+  height: 50px;
+  font-size: 15px;
+  border-radius: 6px;
+
+}
+.btns{
+  display: flex;
+  margin-top: 20px;
+  gap: 50px;
+}
+.d-none{
+  display: none;
+}
+header{
+  display: flex;
+  justify-content: center;
+  
+}
+ul{
+  border: none;
+  gap: 100px;
+}
+li{
+  font-size: 20px;
+
+}
+.form{
+  margin-top: 100px;
+  display: flex;
+  align-items: center;
+flex-direction: column;
+}
+.btn-student,.btn-teacher{
+  border: none;
+  background-color: rgb(55, 159, 238);
+  border-radius: 6px;
+  padding: 10px 5px;
+  margin-left: 5px;
+}
+.btn-delete{
+  border: 1px solid black;
+
+  border-radius: 5px;
+  background-color: red;
+}
+.table{
+  margin-top: 100px;
+
+}

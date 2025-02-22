@@ -1,15 +1,15 @@
 import { useState,useEffect } from 'react';
 import axios from "axios";
 import baseURL from "./consts";
-export default function Students(){
+export default function Teachers(){
   const [data, setData]= useState([])
   const getData=async() =>{
     await axios
-     .get(baseURL("students"))
+     .get(baseURL("teachers"))
       .then(response => { setData (response.data); })
   }
   const buttonDelete=async(id)=>{
-    await axios.delete(baseURL(`students/${id}`));
+    await axios.delete(baseURL(`teachers/${id}`));
     setData(data.filter((item)=>{return item.id !== id}))
   }
   useEffect(()=>{
@@ -17,7 +17,7 @@ export default function Students(){
   },[])
     return(
         <>
-        <table className="table " >
+        <table className="table" >
           <thead>
     <tr>
       <th scope="col">ID</th>
