@@ -15,8 +15,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Header /> } >
           <Route index element={<Form />} />
-          {/* <Route path="students" element={<Students />} />
-          <Route path="teachers" element={<Teachers />} /> */}
+          <Route path="students" element={<Students />} />
+          <Route path="teachers" element={<Teachers />} /> 
         </Route>
       </Routes>
     </BrowserRouter>

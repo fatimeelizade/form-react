@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios from "axios";
 import baseURL from './consts';
-// import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import { useMutation} from '@tanstack/react-query';
 function Form() {
   /* const queryClient = useQueryClient();
@@ -57,25 +56,44 @@ function Form() {
     function changeDatas(e){
       setData({ ...data, [e.target.name]: e.target.value })
     }
- const postData = async(data)=>{
+ const postDataStudents = async(data)=>{
     return await axios.post(baseURL("students"), data)
  }
+ const postDataTeachers = async(data)=>{
+  return await axios.post(baseURL("teachers"), data)
+}
 //  const [mutate, { isLoading, isError, error }] = useMutation(res);
-const { mutate} = useMutation(postData, () => {
-    setData({ firstname: "", lastname: "", email: "" });
-  }
-);
+const {mutate} = useMutation({
+  mutationFn:postDataStudents, 
+  onSuccess:() => { 
+      setData({ firstname: "", lastname: "", email: "" });
+    }
+});
  const handleClick =()=>{
   if(!data.firstname || !data.lastname || !data.email){
-    alert("bos yerleri doldurun");
-    return
-  }else{
+    alert("bos yerleri doldurun"); 
+  }
+  else{
+    mutate(data)
+  }
+ }
+ const {mutate} = useMutation({
+  mutationFn:postDataTeachers, 
+  onSuccess:() => { 
+      setData({ firstname: "", lastname: "", email: "" });
+    }
+});
+ const handleClickTeacher =()=>{
+  if(!data.firstname || !data.lastname || !data.email){
+    alert("bos yerleri doldurun"); 
+  }
+  else{
     mutate(data)
   }
  }
     return (
       <>
-      <div className='form'>
+      <div className='form'> 
         <div>
         <label htmlFor="fname">First name:</label>
         <input type="text" id="fname" name="firstname" onChange={changeDatas} value={data.firstname}/>
@@ -90,6 +108,7 @@ const { mutate} = useMutation(postData, () => {
         </div>
         <div>
         <button className='btn-student' onClick={handleClick}>Create student</button>
+        <button className='btn-student' onClick={handleClickTeacher}>Create student</button>
 
         </div>
       </div>
