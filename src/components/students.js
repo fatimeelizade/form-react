@@ -24,8 +24,7 @@ export default function Students() {
 
   const filteredData = data.filter((student) => {
     const searchName = student.firstname.toLowerCase().includes(search.toLowerCase()) || student.lastname.toLowerCase().includes(search.toLowerCase())
-    const filterPoint = filterByPoint === "" || student.point.toString() === filterByPoint
-    return searchName && filterPoint
+    return searchName
   })
   const indexOfLastPost = pagination * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage

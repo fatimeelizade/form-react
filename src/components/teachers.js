@@ -23,8 +23,7 @@ export default function Teachers() {
   }, [])
   const filteredData = data.filter((teacher)=>{
     const searchName = teacher.firstname.toLowerCase().includes(search.toLowerCase()) || teacher.lastname.toLowerCase().includes(search.toLowerCase())
-    const searchSahe = filterSahe === "" || teacher.sahe=== filterSahe
-    return searchName && searchSahe
+    return searchName
   })
   const indexOfLastPost = pagination * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
