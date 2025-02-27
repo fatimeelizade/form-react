@@ -1,63 +1,74 @@
-import { useState,useEffect } from 'react';
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import baseURL from "./consts";
-export default function Students(){
-  async function getStudents(skip = 0) {
-    const { data } = await axios.get(`https://67ade6f79e85da2f020ba665.mockapi.io/forms/students?skip=${skip}`);
-    return data;
+import Pagination from "./Pagination";
+
+export default function Students() {
+  const [data, setData] = useState([])
+  const [search, setSearch] = useState("")
+  const [filterByPoint, setFilterByPoint] = useState("")
+  const [pagination, setPagination] = useState(1)
+  const postsPerPage = 10
+  const getData = async () => {
+      const res = await axios.get(baseURL("students"))
+      setData(res.data)
   }
-  const [page, setPage] = useState(0);
-  const queryClient = useQueryClient();
-
-  const { data: students} = useQuery({
-    queryKey:["students", page],
-    queryFn:()=>getStudents(page*10),
-  });
-
   const buttonDelete = async (id) => {
-    await axios.delete(baseURL(`students/${id}`));
-  };
-  /* const [data, setData]= useState([])
-  const getData=async() =>{
-    await axios
-     .get(baseURL("students"))
-      .then(response => { setData (response.data); })
+    await axios.delete(baseURL(`students/${id}`))
+    alert("Telebe silindi")
+    setData(data.filter((item) => item.id !== id))
   }
-  const buttonDelete=async(id)=>{
-    await axios.delete(baseURL(`students/${id}`));
-    setData(data.filter((item)=>{return item.id !== id}))
-  }
-  useEffect(()=>{
+  useEffect(() => {
     getData()
-  },[]) */
-    return(
-        <>
+  },[])
+
+  const filteredData = data.filter((student) => {
+    const searchName = student.firstname.toLowerCase().includes(search.toLowerCase()) || student.lastname.toLowerCase().includes(search.toLowerCase())
+    const filterPoint = filterByPoint === "" || student.point.toString() === filterByPoint
+    return searchName && filterPoint
+  })
+  const indexOfLastPost = pagination * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = filteredData.slice(indexOfFirstPost, indexOfLastPost)
+  return (
+    <>
+      <input
+        type="text" placeholder="name" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <input
+        type="number" placeholder="point" value={filterByPoint} onChange={(e) => setFilterByPoint(e.target.value)}
+      />
+
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Firstname</th>
-            <th scope="col">Lastname</th>
-            <th scope="col">Email</th>
+             <th>ID</th>
+             <th>Firstname</th>
+             <th>Lastname</th>
+            <th>Point</th>
+             <th>Delete</th>
           </tr>
         </thead>
         <tbody>
-        {students.map((student) => (
-            <tr key={student.id}>
-            <th scope="row">{student.id}</th>
-             <td>{student.firstname}</td>
-            <td>{student.lastname}</td>
-          <td>{student.email}</td>
-           <td>
-             <button className="btn-delete" onClick={() => buttonDelete(student.id)}>Delete</button>
-         </td>
+          {currentPosts.map((student) => (
+              <tr key={student.id}>
+                <td>{student.id}</td>
+                 <td>{student.firstname}</td>
+                <td>{student.lastname}</td>
+                  <td>{student.point}</td>
+                <td>
+                <button className="btn-delete" onClick={()=>buttonDelete(student.id)}>Delete</button>
+              </td>
             </tr>
-         ))}
+          ))}
         </tbody>
       </table>
-      <button onClick={() => setPage((prev) => prev - 1)}>Arxaya</button>
-      <button onClick={()=>setPage((prev) =>prev+1)}>Qabaga</button>
-        </>
-    )
+
+      <Pagination
+        postsPerPage={postsPerPage}
+        totalPosts={filteredData.length}
+        currentPage={pagination}
+        paginate={setPagination}
+      />
+    </>
+  );
 }

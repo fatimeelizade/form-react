@@ -1,0 +1,30 @@
+{
+  "studentss": [
+    {
+      "id": "1",
+      "firstname": "ft",
+      "lastname": "lzd",
+      "point": "f@gmail.com"
+    },
+    {
+      "id": "2",
+      "firstname": "jiij",
+      "lastname": "ijij",
+      "point": "ijij"
+    }
+  ],
+  "teacherss": [
+    {
+      "id": "1",
+      "firstname": "ft",
+      "lastname": "lzd",
+      "sahe": "frontend"
+    },
+    {
+      "id": "2",
+      "firstname": "ijij",
+      "lastname": "jni",
+      "sahe": "ji"
+    }
+  ]
+}

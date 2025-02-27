@@ -1,63 +1,73 @@
-import { useState,useEffect } from 'react';
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import baseURL from "./consts";
-export default function Teachers(){
-  async function getTeachers(skip = 0) {
-    const { data } = await axios.get(`https://67ade6f79e85da2f020ba665.mockapi.io/forms/teachers?skip=${skip}`);
-    return data;
+import Pagination from "./Pagination";
+
+export default function Teachers() {
+  const [data, setData] = useState([])
+  const [search ,setSearch] = useState("")
+  const [filterSahe, setfilterSahe] = useState("")
+  const [pagination, setPagination] = useState(1)
+  const postsPerPage = 10
+  const getData = async () => {
+    const res = await axios.get(baseURL("teachers"))
+    setData(res.data);
   }
-  const [page, setPage] = useState(0);
-  const queryClient = useQueryClient();
-
-  const { data: teachers} = useQuery({
-    queryKey:["teachers", page],
-    queryFn:()=>getTeachers(page*10),
-  });
-
   const buttonDelete = async (id) => {
-    await axios.delete(baseURL(`teachers/${id}`));
-  };
-  /* const [data, setData]= useState([])
-  const getData=async() =>{
-    await axios
-     .get(baseURL("students"))
-      .then(response => { setData (response.data); })
+    await axios.delete(baseURL(`teachers/${id}`))
+    alert("Muellim silindi")
+    setData(data.filter((item)=>item.id !== id))
   }
-  const buttonDelete=async(id)=>{
-    await axios.delete(baseURL(`students/${id}`));
-    setData(data.filter((item)=>{return item.id !== id}))
-  }
-  useEffect(()=>{
+  useEffect(() => {
     getData()
-  },[]) */
-    return(
-        <>
+  }, [])
+  const filteredData = data.filter((teacher)=>{
+    const searchName = teacher.firstname.toLowerCase().includes(search.toLowerCase()) || teacher.lastname.toLowerCase().includes(search.toLowerCase())
+    const searchSahe = filterSahe === "" || teacher.sahe=== filterSahe
+    return searchName && searchSahe
+  })
+  const indexOfLastPost = pagination * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = filteredData.slice(indexOfFirstPost, indexOfLastPost)
+  return (
+    <>
+      <input
+        type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)}
+      />
+  <input
+        type="text" placeholder="Filter by point" value={filterSahe} onChange={(e) => setfilterSahe(e.target.value)}
+      />
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Firstname</th>
-            <th scope="col">Lastname</th>
-            <th scope="col">Email</th>
+            <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Sahe</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
-        {teachers.map((teacher) => (
+          {currentPosts.map((teacher) => (
             <tr key={teacher.id}>
-            <th scope="row">{teacher.id}</th>
-             <td>{teacher.firstname}</td>
-            <td>{teacher.lastname}</td>
-          <td>{student.email}</td>
-           <td>
-             <button className="btn-delete" onClick={() => buttonDelete(teacher.id)}>Delete</button>
-         </td>
+                <td>{teacher.id}</td>
+               <td>{teacher.firstname}</td>
+                <td>{teacher.lastname}</td>
+               <td>{teacher.sahe}</td>
+              <td>
+                <button className="btn-delete" onClick={() => buttonDelete(teacher.id)}>Delete</button>
+              </td>
             </tr>
-         ))}
+          ))}
         </tbody>
       </table>
-      <button onClick={() => setPage((prev) => prev - 1)}>Arxaya</button>
-      <button onClick={()=>setPage((prev) =>prev+1)}>Qabaga</button>
-        </>
-    )
+
+      <Pagination
+        postsPerPage={postsPerPage}
+        totalPosts={filteredData.length}
+        currentPage={pagination}
+        paginate={setPagination}
+      />
+    </>
+  );
 }
